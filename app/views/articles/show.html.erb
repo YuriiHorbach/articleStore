@@ -7,4 +7,6 @@
 <%= link_to "Main page", articles_path %>
 <br>
 <%= link_to "Edit", edit_article_path(@article) %>
+<br>
+<%= link_to "Delete", article_path(@article), method: :delete, data: {confirm:"Are you sure?"} %>
 
