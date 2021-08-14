@@ -1,6 +1,10 @@
 class ArticlesController < ApplicationController
   def index
-    @articles = Article.all
+    if current_user.subscription_status == "active"
+      @articles = Article.all
+    else
+      @articles = Article.free
+    end
   end
 
   def show
