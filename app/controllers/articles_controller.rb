@@ -9,6 +9,9 @@ class ArticlesController < ApplicationController
 
   def show
     @article = Article.find(params[:id])
+    if @article.premium? && current_user.subscription_status != "active"
+      redirect_to articles_path, alert: "Only for active subscribers"
+    end
   end
 
   def new
