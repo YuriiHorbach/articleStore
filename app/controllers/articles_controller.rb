@@ -1,4 +1,6 @@
 class ArticlesController < ApplicationController
+  before_action :set_article, only: %i[ show edit update destroy]
+
   def index
     if current_user.subscription_status == "active"
       @articles = Article.all
@@ -8,7 +10,6 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    @article = Article.find(params[:id])
     if @article.premium? && current_user.subscription_status != "active"
       redirect_to articles_path, alert: "Only for active subscribers"
     end
@@ -50,6 +51,15 @@ class ArticlesController < ApplicationController
   end
 
   private
+
+  def set_article
+    begin
+     @article = Article.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+     flash[:alert] = 'There is no article with such id'
+     redirect_to root_path
+    end
+  end
 
   def article_params
     params.require(:article).permit(:title, :content)
